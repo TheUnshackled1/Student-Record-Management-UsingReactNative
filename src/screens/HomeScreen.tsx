@@ -8,7 +8,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useSQLiteContext } from 'expo-sqlite';
+import { useSQLiteContext } from '../database/DatabaseContext';
 import { Student, StudentInput } from '../types/student';
 import {
   getAllStudents,
@@ -18,6 +18,7 @@ import {
 } from '../database/db';
 import { StudentCard } from '../components/StudentCard';
 import { StudentFormModal } from '../components/StudentFormModal';
+import { DeleteConfirmModal } from '../components/DeleteConfirmModal';
 
 export const HomeScreen: React.FC = () => {
   const db = useSQLiteContext();
@@ -25,6 +26,7 @@ export const HomeScreen: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
 
   const loadStudents = useCallback(async () => {
     try {
@@ -66,31 +68,23 @@ export const HomeScreen: React.FC = () => {
     await loadStudents();
   };
 
-  const handleConfirmDelete = (student: Student) => {
-    Alert.alert(
-      'Delete Student',
-      `Are you sure you want to delete "${student.name}" from the records?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteStudent(db, student.id);
-              await loadStudents();
-            } catch (error) {
-              Alert.alert(
-                'Delete Failed',
-                error instanceof Error
-                  ? error.message
-                  : 'Could not delete student record.'
-              );
-            }
-          },
-        },
-      ]
-    );
+  const handlePromptDelete = (student: Student) => {
+    setStudentToDelete(student);
+  };
+
+  const handleConfirmDelete = async (student: Student) => {
+    try {
+      setStudentToDelete(null);
+      await deleteStudent(db, student.id);
+      await loadStudents();
+    } catch (error) {
+      Alert.alert(
+        'Delete Failed',
+        error instanceof Error
+          ? error.message
+          : 'Could not delete student record.'
+      );
+    }
   };
 
   return (
@@ -130,7 +124,7 @@ export const HomeScreen: React.FC = () => {
             <StudentCard
               student={item}
               onEdit={handleOpenEditModal}
-              onDelete={handleConfirmDelete}
+              onDelete={handlePromptDelete}
             />
           )}
           ListEmptyComponent={
@@ -150,6 +144,13 @@ export const HomeScreen: React.FC = () => {
         initialStudent={selectedStudent}
         onClose={() => setModalVisible(false)}
         onSubmit={handleSubmitForm}
+      />
+
+      <DeleteConfirmModal
+        visible={studentToDelete !== null}
+        student={studentToDelete}
+        onCancel={() => setStudentToDelete(null)}
+        onConfirm={handleConfirmDelete}
       />
     </View>
   );
@@ -199,6 +200,9 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
+    maxWidth: 760,
+    width: '100%',
+    alignSelf: 'center',
   },
   emptyListContent: {
     flexGrow: 1,

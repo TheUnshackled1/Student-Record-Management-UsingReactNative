@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, StatusBar, Platform } from 'react-native';
-import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
+import { SQLiteProvider } from './src/database/DatabaseContext';
 import { migrateDbIfNeeded } from './src/database/db';
 import { HomeScreen } from './src/screens/HomeScreen';
 
