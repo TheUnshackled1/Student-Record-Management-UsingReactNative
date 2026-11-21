@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Student Record Management",
+    "slug": "student-record-management",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.studentrecord.management"
+    },
+    "plugins": [
+      "expo-sqlite"
+    ]
+  }
+}
