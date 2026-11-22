@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { useSQLiteContext } from '../database/DatabaseContext';
 import { Student, StudentInput } from '../types/student';
@@ -16,9 +17,12 @@ import {
   updateStudent,
   deleteStudent,
 } from '../database/db';
+import { CARD_THEMES } from '../theme/palettes';
+import { KpiSummaryRow } from '../components/KpiSummaryRow';
 import { StudentCard } from '../components/StudentCard';
 import { StudentFormModal } from '../components/StudentFormModal';
 import { DeleteConfirmModal } from '../components/DeleteConfirmModal';
+import { LayersIcon, PlusBoldIcon } from '../components/BoldIcons';
 
 export const HomeScreen: React.FC = () => {
   const db = useSQLiteContext();
@@ -87,39 +91,86 @@ export const HomeScreen: React.FC = () => {
     }
   };
 
+  const blueTheme = CARD_THEMES.blue;
+  const purpleTheme = CARD_THEMES.purple;
+
+  const webBrandIconStyle =
+    Platform.OS === 'web'
+      ? ({
+          backgroundImage: `linear-gradient(135deg, ${blueTheme.iconBgStart} 0%, ${purpleTheme.iconBgEnd} 100%)`,
+          boxShadow: `0 8px 18px -3px ${blueTheme.iconShadow}, inset 0 1px 1px rgba(255, 255, 255, 0.35)`,
+        } as unknown as object)
+      : {};
+
+  const webAddBtnStyle =
+    Platform.OS === 'web'
+      ? ({
+          backgroundImage: `linear-gradient(135deg, ${CARD_THEMES.emerald.iconBgStart} 0%, ${CARD_THEMES.emerald.iconBgEnd} 100%)`,
+          boxShadow: `0 8px 18px -3px ${CARD_THEMES.emerald.iconShadow}, inset 0 1px 1px rgba(255, 255, 255, 0.35)`,
+        } as unknown as object)
+      : {};
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View>
-          <Text style={styles.headerTitle}>Student Records</Text>
-          <Text style={styles.headerSubtitle}>
-            SQLite Local Database • {students.length}{' '}
-            {students.length === 1 ? 'Student' : 'Students'}
-          </Text>
+        <View style={styles.headerInner}>
+          <View style={styles.brandRow}>
+            <View style={[styles.brandIconBlock, webBrandIconStyle]}>
+              <LayersIcon size={24} color="#FFFFFF" strokeWidth={2.5} />
+            </View>
+            <View>
+              <Text style={styles.headerTitle}>Student Record Hub</Text>
+              <View style={styles.subtitleBadgeRow}>
+                <View style={styles.themeDotBlue} />
+                <View style={styles.themeDotAmber} />
+                <View style={styles.themeDotPurple} />
+                <View style={styles.themeDotEmerald} />
+                <Text style={styles.headerSubtitle}>
+                  SQLite Multi-Theme Dashboard
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={[styles.addButton, webAddBtnStyle]}
+            onPress={handleOpenAddModal}
+            activeOpacity={0.85}
+          >
+            <PlusBoldIcon size={18} color="#FFFFFF" strokeWidth={2.5} />
+            <Text style={styles.addButtonText}>Add Student</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={handleOpenAddModal}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.addButtonText}>+ Add Student</Text>
-        </TouchableOpacity>
       </View>
 
       {loading ? (
         <View style={styles.centerState}>
-          <ActivityIndicator size="large" color="#4F46E5" />
+          <ActivityIndicator size="large" color="#2563EB" />
           <Text style={styles.emptySubtitle}>Loading student records...</Text>
         </View>
       ) : (
         <FlatList
           data={students}
           keyExtractor={(item) => String(item.id)}
-          contentContainerStyle={
-            students.length === 0 ? styles.emptyListContent : styles.listContent
-          }
+          contentContainerStyle={styles.listContent}
           onRefresh={loadStudents}
           refreshing={loading}
+          ListHeaderComponent={
+            <View>
+              <KpiSummaryRow students={students} />
+              <View style={styles.sectionHeaderRow}>
+                <Text style={styles.sectionTitle}>
+                  Registered Student Directory
+                </Text>
+                <View style={styles.sectionCountBadge}>
+                  <Text style={styles.sectionCountText}>
+                    {students.length}{' '}
+                    {students.length === 1 ? 'Record' : 'Records'}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          }
           renderItem={({ item }) => (
             <StudentCard
               student={item}
@@ -128,11 +179,36 @@ export const HomeScreen: React.FC = () => {
             />
           )}
           ListEmptyComponent={
-            <View style={styles.centerState}>
-              <Text style={styles.emptyTitle}>No Students Registered Yet</Text>
-              <Text style={styles.emptySubtitle}>
-                Tap "+ Add Student" above to add your first student record to
-                the SQLite database.
+            <View
+              style={[
+                styles.emptyCard,
+                {
+                  backgroundColor: purpleTheme.cardBg,
+                  borderColor: purpleTheme.border,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.emptyIconBlock,
+                  {
+                    backgroundColor: purpleTheme.iconBgStart,
+                    borderColor: purpleTheme.iconBorder,
+                  },
+                ]}
+              >
+                <LayersIcon size={26} color="#FFFFFF" strokeWidth={2.5} />
+              </View>
+              <Text
+                style={[styles.emptyTitle, { color: purpleTheme.valueText }]}
+              >
+                No Student Records Registered Yet
+              </Text>
+              <Text
+                style={[styles.emptySubtitle, { color: purpleTheme.labelText }]}
+              >
+                Click "Add Student" in the top right corner to create your first
+                colorful SQLite student record card.
               </Text>
             </View>
           }
@@ -159,55 +235,135 @@ export const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F1F5F9',
   },
   header: {
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-    paddingTop: 18,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
+    borderBottomWidth: 1.5,
     borderBottomColor: '#E2E8F0',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  headerInner: {
+    maxWidth: 960,
+    width: '100%',
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  brandIconBlock: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    backgroundColor: '#2563EB',
+    borderWidth: 1,
+    borderColor: '#60A5FA',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 22,
     fontWeight: '800',
     color: '#0F172A',
+    letterSpacing: -0.3,
+  },
+  subtitleBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginTop: 3,
+  },
+  themeDotBlue: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#3B82F6',
+  },
+  themeDotAmber: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#F59E0B',
+  },
+  themeDotPurple: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#A855F7',
+  },
+  themeDotEmerald: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#10B981',
   },
   headerSubtitle: {
-    fontSize: 13,
-    color: '#64748B',
-    marginTop: 2,
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#475569',
+    marginLeft: 4,
   },
   addButton: {
-    backgroundColor: '#4F46E5',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 10,
-    shadowColor: '#4F46E5',
-    shadowOffset: { width: 0, height: 2 },
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#10B981',
+    borderColor: '#34D399',
+    borderWidth: 1,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 13,
+    shadowColor: '#059669',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 8,
+    elevation: 4,
   },
   addButtonText: {
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontWeight: '800',
     fontSize: 14,
+    letterSpacing: 0.2,
   },
   listContent: {
-    padding: 16,
-    maxWidth: 760,
+    padding: 20,
+    maxWidth: 960,
     width: '100%',
     alignSelf: 'center',
   },
-  emptyListContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 24,
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#1E293B',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  sectionCountBadge: {
+    backgroundColor: '#DBEAFE',
+    borderColor: '#93C5FD',
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 999,
+  },
+  sectionCountText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#1E40AF',
   },
   centerState: {
     flex: 1,
@@ -215,17 +371,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
+  emptyCard: {
+    borderRadius: 20,
+    borderWidth: 1.5,
+    padding: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  emptyIconBlock: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 14,
+  },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#1E293B',
-    marginBottom: 8,
+    fontWeight: '800',
+    marginBottom: 6,
     textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#64748B',
+    fontWeight: '600',
     textAlign: 'center',
     lineHeight: 20,
+    maxWidth: 440,
   },
 });

@@ -14,6 +14,8 @@ import {
   StudentInput,
   validateStudentInput,
 } from '../types/student';
+import { CARD_THEMES } from '../theme/palettes';
+import { LayersIcon, ShieldCheckIcon } from './BoldIcons';
 
 interface StudentFormModalProps {
   visible: boolean;
@@ -35,6 +37,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
   const [submitting, setSubmitting] = useState(false);
 
   const isEditing = initialStudent !== null;
+  const activeTheme = isEditing ? CARD_THEMES.emerald : CARD_THEMES.blue;
 
   useEffect(() => {
     if (visible) {
@@ -73,10 +76,18 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
     }
   };
 
+  const webIconBlockStyle =
+    Platform.OS === 'web'
+      ? ({
+          backgroundImage: `linear-gradient(135deg, ${activeTheme.iconBgStart} 0%, ${activeTheme.iconBgEnd} 100%)`,
+          boxShadow: `0 8px 18px -3px ${activeTheme.iconShadow}, inset 0 1px 1px rgba(255, 255, 255, 0.35)`,
+        } as unknown as object)
+      : {};
+
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType="fade"
       transparent
       onRequestClose={onClose}
     >
@@ -84,15 +95,47 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
         style={styles.overlay}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <View style={styles.modalCard}>
-          <Text style={styles.modalTitle}>
-            {isEditing ? 'Update Student' : 'Add New Student'}
-          </Text>
-          <Text style={styles.modalSubtitle}>
-            {isEditing
-              ? 'Modify the student details below and tap Update.'
-              : "Enter the student's name, course, and age."}
-          </Text>
+        <View
+          style={[
+            styles.modalCard,
+            {
+              backgroundColor: activeTheme.cardBg,
+              borderColor: activeTheme.borderHover,
+            },
+          ]}
+        >
+          <View style={styles.headerRow}>
+            <View
+              style={[
+                styles.iconBlock,
+                {
+                  backgroundColor: activeTheme.iconBgStart,
+                  borderColor: activeTheme.iconBorder,
+                },
+                webIconBlockStyle,
+              ]}
+            >
+              {isEditing ? (
+                <ShieldCheckIcon size={24} color="#FFFFFF" strokeWidth={2.5} />
+              ) : (
+                <LayersIcon size={24} color="#FFFFFF" strokeWidth={2.5} />
+              )}
+            </View>
+            <View style={styles.headerTextCol}>
+              <Text
+                style={[styles.modalTitle, { color: activeTheme.valueText }]}
+              >
+                {isEditing ? 'Update Student Record' : 'Add New Student'}
+              </Text>
+              <Text
+                style={[styles.modalSubtitle, { color: activeTheme.labelText }]}
+              >
+                {isEditing
+                  ? 'Modify the student details below and save to SQLite.'
+                  : "Enter the student's name, course, and age."}
+              </Text>
+            </View>
+          </View>
 
           {errorMessage ? (
             <View style={styles.errorBanner}>
@@ -101,9 +144,11 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
           ) : null}
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Student Name</Text>
+            <Text style={[styles.label, { color: activeTheme.titleText }]}>
+              STUDENT FULL NAME
+            </Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { borderColor: activeTheme.border }]}
               placeholder="e.g. Juan Dela Cruz"
               placeholderTextColor="#94A3B8"
               value={name}
@@ -113,10 +158,12 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
           </View>
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Course</Text>
+            <Text style={[styles.label, { color: activeTheme.titleText }]}>
+              COURSE / PROGRAM
+            </Text>
             <TextInput
-              style={styles.input}
-              placeholder="e.g. BS Information Technology"
+              style={[styles.input, { borderColor: activeTheme.border }]}
+              placeholder="e.g. BS Computer Science"
               placeholderTextColor="#94A3B8"
               value={course}
               onChangeText={setCourse}
@@ -124,9 +171,11 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
           </View>
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Age</Text>
+            <Text style={[styles.label, { color: activeTheme.titleText }]}>
+              AGE
+            </Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { borderColor: activeTheme.border }]}
               placeholder="e.g. 20"
               placeholderTextColor="#94A3B8"
               value={age}
@@ -146,7 +195,14 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.button, styles.saveButton]}
+              style={[
+                styles.button,
+                {
+                  backgroundColor: activeTheme.iconBgStart,
+                  borderColor: activeTheme.iconBorder,
+                },
+                webIconBlockStyle,
+              ]}
               onPress={handleSave}
               disabled={submitting}
             >
@@ -154,8 +210,8 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 {submitting
                   ? 'Saving...'
                   : isEditing
-                  ? 'Update Student'
-                  : 'Add Student'}
+                  ? 'Update Record'
+                  : 'Save Student'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -168,89 +224,106 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(15, 23, 42, 0.5)',
+    backgroundColor: 'rgba(15, 23, 42, 0.6)',
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   modalCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 22,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 6,
+    width: '100%',
+    maxWidth: 460,
+    borderRadius: 20,
+    padding: 24,
+    borderWidth: 2,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.2,
+    shadowRadius: 24,
+    elevation: 8,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 14,
+  },
+  iconBlock: {
+    width: 50,
+    height: 50,
+    borderRadius: 14,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTextCol: {
+    flex: 1,
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#0F172A',
-    marginBottom: 4,
+    fontWeight: '800',
+    marginBottom: 2,
   },
   modalSubtitle: {
     fontSize: 13,
-    color: '#64748B',
-    marginBottom: 18,
+    fontWeight: '600',
   },
   errorBanner: {
     backgroundColor: '#FEF2F2',
-    borderColor: '#FECACA',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 14,
+    borderColor: '#F87171',
+    borderWidth: 1.5,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
   },
   errorText: {
-    color: '#DC2626',
+    color: '#B91C1C',
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '700',
   },
   fieldGroup: {
     marginBottom: 14,
   },
   label: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#334155',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 0.5,
     marginBottom: 6,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#CBD5E1',
-    borderRadius: 10,
+    borderWidth: 1.5,
+    borderRadius: 12,
     paddingHorizontal: 14,
-    paddingVertical: 11,
+    paddingVertical: 12,
     fontSize: 15,
+    fontWeight: '600',
     color: '#0F172A',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#FFFFFF',
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: 10,
+    marginTop: 12,
     gap: 10,
   },
   button: {
     paddingVertical: 12,
-    paddingHorizontal: 18,
-    borderRadius: 10,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1,
     alignItems: 'center',
   },
   cancelButton: {
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#CBD5E1',
   },
   cancelButtonText: {
     color: '#475569',
-    fontWeight: '600',
+    fontWeight: '700',
     fontSize: 14,
-  },
-  saveButton: {
-    backgroundColor: '#4F46E5',
   },
   saveButtonText: {
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontWeight: '800',
     fontSize: 14,
   },
 });

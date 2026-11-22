@@ -7,6 +7,7 @@ import {
   deleteStudent,
 } from '../src/database/db';
 import { validateStudentInput } from '../src/types/student';
+import { CARD_THEMES, THEME_KEYS, getStudentTheme } from '../src/theme/palettes';
 
 describe('Student Record SQLite Database Layer', () => {
   let mockDb: jest.Mocked<
@@ -87,7 +88,7 @@ describe('Student Record SQLite Database Layer', () => {
   });
 });
 
-describe('Student Form Validation', () => {
+describe('Student Form Validation & Multi-Theme Palettes', () => {
   it('rejects empty name, course, or age', () => {
     expect(validateStudentInput('', 'BSCS', '20').valid).toBe(false);
     expect(validateStudentInput('Juan', '', '20').valid).toBe(false);
@@ -111,5 +112,12 @@ describe('Student Form Validation', () => {
         age: 20,
       },
     });
+  });
+
+  it('provides four distinct color palettes (blue, amber, purple, emerald) and deterministic student themes', () => {
+    expect(THEME_KEYS).toEqual(['blue', 'amber', 'purple', 'emerald']);
+    const theme = getStudentTheme(1, 'BS Computer Science');
+    expect(CARD_THEMES[theme.key]).toBeDefined();
+    expect(theme.cardBg).not.toBe('#FFFFFF');
   });
 });
