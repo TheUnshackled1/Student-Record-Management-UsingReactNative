@@ -16,6 +16,7 @@ import {
   addStudent,
   updateStudent,
   deleteStudent,
+  seedSampleStudents,
 } from '../database/db';
 import { CARD_THEMES } from '../theme/palettes';
 import { KpiSummaryRow } from '../components/KpiSummaryRow';
@@ -88,6 +89,23 @@ export const HomeScreen: React.FC = () => {
           ? error.message
           : 'Could not delete student record.'
       );
+    }
+  };
+
+  const handleLoadSampleData = async () => {
+    try {
+      setLoading(true);
+      await seedSampleStudents(db);
+      await loadStudents();
+    } catch (error) {
+      Alert.alert(
+        'Seed Error',
+        error instanceof Error
+          ? error.message
+          : 'Could not seed sample student records.'
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -207,9 +225,22 @@ export const HomeScreen: React.FC = () => {
               <Text
                 style={[styles.emptySubtitle, { color: purpleTheme.labelText }]}
               >
-                Click "Add Student" in the top right corner to create your first
-                colorful SQLite student record card.
+                Click "Add Student" in the top right corner or load the default
+                sample student dataset below.
               </Text>
+              <TouchableOpacity
+                style={[
+                  styles.seedButton,
+                  {
+                    backgroundColor: purpleTheme.iconBgStart,
+                    borderColor: purpleTheme.iconBorder,
+                  },
+                ]}
+                onPress={handleLoadSampleData}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.seedButtonText}>Load Sample Data</Text>
+              </TouchableOpacity>
             </View>
           }
         />
@@ -400,5 +431,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 20,
     maxWidth: 440,
+  },
+  seedButton: {
+    marginTop: 16,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  seedButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '800',
+    fontSize: 13,
   },
 });

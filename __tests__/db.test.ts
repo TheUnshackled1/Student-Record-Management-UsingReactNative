@@ -1,5 +1,6 @@
 import { type SQLiteDatabase } from 'expo-sqlite';
 import {
+  INITIAL_STUDENTS,
   migrateDbIfNeeded,
   getAllStudents,
   addStudent,
@@ -24,12 +25,22 @@ describe('Student Record SQLite Database Layer', () => {
     };
   });
 
-  it('initializes the students table via migrateDbIfNeeded', async () => {
+  it('initializes the students table and seeds initial student data when empty', async () => {
     await migrateDbIfNeeded(mockDb as unknown as SQLiteDatabase);
     expect(mockDb.execAsync).toHaveBeenCalledTimes(1);
     expect(mockDb.execAsync.mock.calls[0][0]).toContain(
       'CREATE TABLE IF NOT EXISTS students'
     );
+    expect(mockDb.runAsync).toHaveBeenCalledTimes(INITIAL_STUDENTS.length);
+  });
+
+  it('skips seeding when student records already exist in SQLite', async () => {
+    mockDb.getAllAsync.mockResolvedValueOnce([
+      { id: 1, name: 'Juan Dela Cruz', course: 'BS Computer Science', age: 20 },
+    ]);
+    await migrateDbIfNeeded(mockDb as unknown as SQLiteDatabase);
+    expect(mockDb.execAsync).toHaveBeenCalledTimes(1);
+    expect(mockDb.runAsync).not.toHaveBeenCalled();
   });
 
   it('inserts a student record using addStudent', async () => {
