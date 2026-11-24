@@ -48,23 +48,23 @@ const KpiCardItem: React.FC<{ item: KpiCardConfig }> = ({ item }) => {
   const webCardStyle =
     Platform.OS === 'web'
       ? ({
-          backgroundImage: hovered
-            ? `linear-gradient(145deg, ${theme.cardHoverBg} 0%, ${theme.cardBg} 100%)`
-            : `linear-gradient(145deg, ${theme.cardBg} 0%, #FFFFFF 100%)`,
-          boxShadow: hovered
-            ? `0 14px 28px -6px ${theme.cardShadow}, 0 4px 10px -2px ${theme.cardShadow}`
-            : `0 4px 12px -2px ${theme.cardShadow}`,
-          transition: 'border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease',
-          cursor: 'pointer',
-        } as unknown as object)
+        backgroundImage: hovered
+          ? `linear-gradient(145deg, ${theme.cardHoverBg} 0%, ${theme.cardBg} 100%)`
+          : `linear-gradient(145deg, ${theme.cardBg} 0%, #FFFFFF 100%)`,
+        boxShadow: hovered
+          ? `0 14px 28px -6px ${theme.cardShadow}, 0 4px 10px -2px ${theme.cardShadow}`
+          : `0 4px 12px -2px ${theme.cardShadow}`,
+        transition: 'border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease',
+        cursor: 'pointer',
+      } as unknown as object)
       : {};
 
   const webIconBlockStyle =
     Platform.OS === 'web'
       ? ({
-          backgroundImage: `linear-gradient(135deg, ${theme.iconBgStart} 0%, ${theme.iconBgEnd} 100%)`,
-          boxShadow: `0 8px 18px -3px ${theme.iconShadow}, inset 0 1px 1px rgba(255, 255, 255, 0.35)`,
-        } as unknown as object)
+        backgroundImage: `linear-gradient(135deg, ${theme.iconBgStart} 0%, ${theme.iconBgEnd} 100%)`,
+        boxShadow: `0 8px 18px -3px ${theme.iconShadow}, inset 0 1px 1px rgba(255, 255, 255, 0.35)`,
+      } as unknown as object)
       : {};
 
   return (
@@ -140,8 +140,8 @@ export const KpiSummaryRow: React.FC<KpiSummaryRowProps> = ({ students }) => {
   const averageAge =
     totalStudents > 0
       ? Math.round(
-          (students.reduce((sum, s) => sum + s.age, 0) / totalStudents) * 10
-        ) / 10
+        (students.reduce((sum, s) => sum + s.age, 0) / totalStudents) * 10
+      ) / 10
       : 0;
 
   const kpiCards: KpiCardConfig[] = [
