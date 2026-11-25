@@ -1,0 +1,25 @@
+<mxfile host="app.diagrams.net" modified="2026-11-25T03:50:00.000Z" agent="Antigravity" version="24.0.0" type="device">
+  <diagram id="contribution-workflow" name="Developer Contribution Workflow">
+    <mxGraphModel dx="1000" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="940" pageHeight="260" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="s1" value="1. Fork &amp; Clone&#xa;git clone / npm install" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="80" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="2. Create Feature Branch&#xa;git checkout -b feature/..." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#A855F7;fontColor=#581C87;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="80" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="3. Write Code&#xa;SQLite / Multi-Theme / Multimedia" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;fontColor=#78350F;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="80" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="4. Run Tests&#xa;npm run typecheck &amp; npm test" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#10B981;fontColor=#064E3B;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="80" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="5. Commit &amp; Push&#xa;git push origin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="80" width="140" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

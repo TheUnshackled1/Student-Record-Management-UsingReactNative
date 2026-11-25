@@ -1,0 +1,22 @@
+<mxfile host="app.diagrams.net" modified="2026-11-25T03:50:00.000Z" agent="Antigravity" version="24.0.0" type="device">
+  <diagram id="pr-lifecycle" name="Pull Request Review Lifecycle">
+    <mxGraphModel dx="1000" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="920" pageHeight="240" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p1" value="1. Open Pull Request&#xa;Target: main branch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="24" y="70" width="196" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" value="2. Automated QA Checks&#xa;tsc / jest / expo export" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;fontColor=#78350F;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="254" y="70" width="196" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p3" value="3. Maintainer Review&#xa;SQLite &amp; UI Verification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#A855F7;fontColor=#581C87;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="484" y="70" width="196" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p4" value="4. Merge &amp; Vercel Deploy&#xa;Live in Production" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#10B981;fontColor=#064E3B;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="714" y="70" width="182" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
