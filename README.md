@@ -15,6 +15,7 @@
 [![SQLite Submission PDF](https://img.shields.io/badge/📄_SQLite_Proof-PDF_Report-dc2626?style=flat-square)](documents/Student_Record_Management_Submission.pdf)
 [![Multimedia Submission PDF](https://img.shields.io/badge/📄_Multimedia_Proof-PDF_Report-4f46e5?style=flat-square)](documents/Multimedia_Enterm_Submission.pdf)
 [![Vercel Config](https://img.shields.io/badge/🌐_Deployment-vercel.json-0891b2?style=flat-square)](vercel.json)
+[![Code of Conduct](https://img.shields.io/badge/📜_Code_of_Conduct-CODE__OF__CONDUCT.md-0d9488?style=flat-square)](CODE_OF_CONDUCT.md)
 [![Dependencies](https://img.shields.io/badge/⚙️_Dependencies-package.json-d97706?style=flat-square)](package.json)
 [![MIT License](https://img.shields.io/badge/⚖️_License-LICENSE-16a34a?style=flat-square)](LICENSE)
 
@@ -50,6 +51,8 @@
 - 📘 [Multimedia (Enterm) Implementation Proof Word Doc (`documents/Multimedia_Enterm_Submission.docx`)](documents/Multimedia_Enterm_Submission.docx)
 - 🌐 [Printable HTML Reports (`submission/`)](submission/)
 - 📸 [Mobile Device Output Screenshots (`submission/screenshots/`)](submission/screenshots/)
+- 📜 [Contributor Code of Conduct (`CODE_OF_CONDUCT.md`)](CODE_OF_CONDUCT.md)
+- ⚖️ [MIT License File (`LICENSE`)](LICENSE)
 
 ---
 
@@ -317,6 +320,7 @@ Exports the production static bundle into the `dist/` directory configured in [`
 ├── 🧪 jest.config.js              # Jest & ts-jest test runner configuration
 ├── 📐 tsconfig.json               # Strict TypeScript compiler configuration
 ├── 📦 package.json                # Project scripts, dependencies & devDependencies
+├── 📜 CODE_OF_CONDUCT.md          # Contributor Covenant v2.1 Code of Conduct
 ├── ⚖️ LICENSE                     # MIT License
 └── 📄 README.md                   # Project documentation
 ```

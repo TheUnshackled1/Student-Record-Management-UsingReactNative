@@ -1,0 +1,31 @@
+<mxfile host="app.diagrams.net" modified="2026-11-25T03:47:00.000Z" agent="Antigravity" version="24.0.0" type="device">
+  <diagram id="conduct-enforcement-flow" name="Code of Conduct Enforcement">
+    <mxGraphModel dx="1000" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="920" pageHeight="360" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="report" value="1. Incident Report&#xa;(jtcoronel.chmsu@gmail.com)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="review" value="2. Confidential Review&#xa;&amp; Fair Investigation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#A855F7;fontColor=#581C87;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="120" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tier1" value="Tier 1: Correction&#xa;(Private Written Warning)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#10B981;fontColor=#065F46;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="60" width="170" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="tier2" value="Tier 2: Warning&#xa;(Formal Warning)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;fontColor=#1E40AF;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="60" width="170" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="tier3" value="Tier 3: Temporary Ban&#xa;(Time-Limited Suspension)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;fontColor=#92400E;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="165" width="170" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="tier4" value="Tier 4: Permanent Ban&#xa;(Permanent Removal)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#EF4444;fontColor=#991B1B;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="165" width="170" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;strokeWidth=2;" edge="1" parent="1" source="report" target="review">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
