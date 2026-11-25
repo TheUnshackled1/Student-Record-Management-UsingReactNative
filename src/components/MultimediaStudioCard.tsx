@@ -25,36 +25,52 @@ import {
   SparklesIcon,
 } from './BoldIcons';
 
-export type AnimationMode = 'Fade-In (On Load)' | 'Bounce Effect' | 'Fade Pulse' | 'Slide Motion';
+export type AnimationMode =
+  | 'Fade-In (On Load)'
+  | 'Bounce Effect'
+  | 'Fade Pulse'
+  | 'Slide Motion';
+
+const SAMPLE_VIDEO_MP4_URL = 'https://www.w3schools.com/html/mov_bbb.mp4';
 
 const VIDEO_FRAMES = [
   {
-    step: '01 / 03',
-    title: 'Campus SQLite & Multimedia Orientation',
-    subtitle: 'Storing Student Records Offline with React Native & SQLite',
-    accent: '#3B82F6',
+    step: 'SCENE 01',
+    title: 'BSIS 4C Campus Tour & SQLite Lab',
+    subtitle: 'Mobile Application Development • Live Demo Reel',
+    accent: '#38BDF8',
+    skyStart: '#0F172A',
+    skyEnd: '#1E3A8A',
   },
   {
-    step: '02 / 03',
+    step: 'SCENE 02',
     title: 'Interactive Audio & Video Playback',
-    subtitle: 'Background Music Loop • Button Tap SFX • Embedded Video Controls',
+    subtitle: 'Background Music Loop • Button Tap SFX • Video Stream',
     accent: '#10B981',
+    skyStart: '#064E3B',
+    skyEnd: '#0F766E',
   },
   {
-    step: '03 / 03',
+    step: 'SCENE 03',
     title: 'Smooth UI Micro-Animations',
-    subtitle: 'Entrance Fade-In • Spring Bounce • Dynamic Slide Transitions',
+    subtitle: 'Entrance Fade-In • Spring Bounce • Slide Transitions',
     accent: '#A855F7',
+    skyStart: '#3B0764',
+    skyEnd: '#4C1D95',
   },
 ];
 
 export const MultimediaStudioCard: React.FC = () => {
   const [bgmPlaying, setBgmPlaying] = useState(false);
   const [videoPlaying, setVideoPlaying] = useState(false);
-  const [videoSeconds, setVideoSeconds] = useState(8);
+  const [videoMuted, setVideoMuted] = useState(false);
+  const [videoSeconds, setVideoSeconds] = useState(4);
+  const [videoDuration, setVideoDuration] = useState(10);
   const [activeAnimMode, setActiveAnimMode] =
     useState<AnimationMode>('Fade-In (On Load)');
   const [sfxInfo, setSfxInfo] = useState(getSfxStatus());
+
+  const webVideoRef = useRef<HTMLVideoElement | null>(null);
 
   // Simple Animation values (Fade-In, Bounce Scale, Slide X/Y)
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -62,7 +78,7 @@ export const MultimediaStudioCard: React.FC = () => {
   const slideXAnim = useRef(new Animated.Value(0)).current;
   const slideYAnim = useRef(new Animated.Value(0)).current;
 
-  // Screen-load entrance animation (Fade-In + Slide-Up + Gentle Spring)
+  // Screen-load entrance animation
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -92,14 +108,14 @@ export const MultimediaStudioCard: React.FC = () => {
     });
   }, []);
 
-  // Video player timer loop when playing
+  // Fallback timer progression so offline/headless playback also advances timecode smoothly
   useEffect(() => {
     if (!videoPlaying) return;
     const timer = setInterval(() => {
-      setVideoSeconds((prev) => (prev >= 30 ? 0 : prev + 1));
+      setVideoSeconds((prev) => (prev >= videoDuration ? 0 : prev + 1));
     }, 1000);
     return () => clearInterval(timer);
-  }, [videoPlaying]);
+  }, [videoPlaying, videoDuration]);
 
   const handleToggleBgm = () => {
     const nextState = toggleBackgroundMusic();
@@ -115,12 +131,42 @@ export const MultimediaStudioCard: React.FC = () => {
     const next = !videoPlaying;
     setVideoPlaying(next);
     playTapSoundEffect(next ? 'Video Play' : 'Video Pause');
+
+    if (Platform.OS === 'web' && webVideoRef.current) {
+      try {
+        if (next) {
+          webVideoRef.current.play().catch(() => {});
+        } else {
+          webVideoRef.current.pause();
+        }
+      } catch {
+        // Ignore playback errors in headless mode
+      }
+    }
   };
 
   const handleRestartVideo = () => {
     setVideoSeconds(0);
     setVideoPlaying(true);
     playTapSoundEffect('Video Restart');
+
+    if (Platform.OS === 'web' && webVideoRef.current) {
+      try {
+        webVideoRef.current.currentTime = 0;
+        webVideoRef.current.play().catch(() => {});
+      } catch {
+        // Ignore playback errors
+      }
+    }
+  };
+
+  const handleToggleMuteVideo = () => {
+    const nextMute = !videoMuted;
+    setVideoMuted(nextMute);
+    playTapSoundEffect(nextMute ? 'Video Mute' : 'Video Unmute');
+    if (Platform.OS === 'web' && webVideoRef.current) {
+      webVideoRef.current.muted = nextMute;
+    }
   };
 
   const triggerBounceAnimation = () => {
@@ -138,10 +184,10 @@ export const MultimediaStudioCard: React.FC = () => {
   const triggerFadeAnimation = () => {
     playTapSoundEffect('Fade-In Animation');
     setActiveAnimMode('Fade Pulse');
-    fadeAnim.setValue(0.2);
+    fadeAnim.setValue(0.25);
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 500,
+      duration: 450,
       useNativeDriver: true,
     }).start();
   };
@@ -163,10 +209,16 @@ export const MultimediaStudioCard: React.FC = () => {
   const purpleTheme = CARD_THEMES.purple;
   const emeraldTheme = CARD_THEMES.emerald;
 
-  const frameIndex = Math.floor(videoSeconds / 10) % VIDEO_FRAMES.length;
+  const frameIndex = Math.floor(videoSeconds / 4) % VIDEO_FRAMES.length;
   const currentFrame = VIDEO_FRAMES[frameIndex];
-  const progressPercent = Math.min(100, Math.round((videoSeconds / 30) * 100));
-  const formattedTime = `00:${String(videoSeconds).padStart(2, '0')} / 00:30`;
+  const progressPercent = Math.min(
+    100,
+    Math.max(10, Math.round((videoSeconds / Math.max(1, videoDuration)) * 100))
+  );
+  const formattedTime = `00:${String(Math.floor(videoSeconds)).padStart(
+    2,
+    '0'
+  )} / 00:${String(Math.floor(videoDuration)).padStart(2, '0')}`;
 
   const webIconStyle = (start: string, end: string, shadow: string) =>
     Platform.OS === 'web'
@@ -575,7 +627,7 @@ export const MultimediaStudioCard: React.FC = () => {
                   },
                 ]}
               >
-                Short Video • Play / Pause Controls
+                Short MP4 Video • Play / Pause Controls
               </Text>
             </View>
           </View>
@@ -594,37 +646,146 @@ export const MultimediaStudioCard: React.FC = () => {
           </View>
         </View>
 
-        {/* Video Screen Viewport */}
-        <View style={styles.videoViewport}>
-          <View style={styles.videoTopOverlay}>
-            <Text style={styles.videoClipBadge}>
-              🎬 CLIP {currentFrame.step} • HD 720p
-            </Text>
-            <Text style={styles.videoTimeBadge}>{formattedTime}</Text>
-          </View>
-
-          <View style={styles.videoStageCenter}>
-            <Text style={styles.videoStageTitle}>{currentFrame.title}</Text>
-            <Text style={styles.videoStageSubtitle}>
-              {currentFrame.subtitle}
-            </Text>
-          </View>
-
-          {/* Progress Scrubber Bar */}
-          <View style={styles.progressTrack}>
-            <View
-              style={[
-                styles.progressFill,
-                {
-                  width: `${progressPercent}%`,
-                  backgroundColor: currentFrame.accent,
+        {/* Embedded 16:9 Video Player Screen */}
+        <View
+          style={[
+            styles.videoViewport,
+            Platform.OS === 'web'
+              ? ({
+                  backgroundImage: `linear-gradient(160deg, ${currentFrame.skyStart} 0%, ${currentFrame.skyEnd} 100%)`,
+                } as unknown as object)
+              : {},
+          ]}
+        >
+          {/* Real HTML5 <video> element on Web */}
+          {Platform.OS === 'web'
+            ? React.createElement('video', {
+                ref: (el: HTMLVideoElement | null) => {
+                  webVideoRef.current = el;
                 },
-              ]}
-            />
+                src: SAMPLE_VIDEO_MP4_URL,
+                playsInline: true,
+                loop: true,
+                muted: videoMuted,
+                onLoadedMetadata: (e: { currentTarget: HTMLVideoElement }) => {
+                  const dur = e.currentTarget.duration;
+                  if (dur && Number.isFinite(dur)) {
+                    setVideoDuration(Math.round(dur));
+                  }
+                },
+                onTimeUpdate: (e: { currentTarget: HTMLVideoElement }) => {
+                  setVideoSeconds(Math.floor(e.currentTarget.currentTime));
+                },
+                onPlay: () => setVideoPlaying(true),
+                onPause: () => setVideoPlaying(false),
+                style: {
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: 0.42,
+                  zIndex: 1,
+                },
+              })
+            : null}
+
+          {/* Illustrated Cinema Frame Layer & Center Play/Pause Overlay */}
+          <View style={styles.videoOverlayContent}>
+            <View style={styles.videoTopOverlay}>
+              <View style={styles.liveRecBadge}>
+                <View
+                  style={[
+                    styles.recDot,
+                    { backgroundColor: videoPlaying ? '#10B981' : '#F59E0B' },
+                  ]}
+                />
+                <Text style={styles.videoClipBadgeText}>
+                  🎬 {currentFrame.step} • MP4 720p
+                </Text>
+              </View>
+              <Text style={styles.videoTimeBadge}>{formattedTime}</Text>
+            </View>
+
+            {/* Center Play/Pause Action Circle & Scene Visual */}
+            <View style={styles.videoCenterRow}>
+              <TouchableOpacity
+                style={[
+                  styles.centerPlayCircle,
+                  {
+                    backgroundColor: videoPlaying
+                      ? 'rgba(16, 185, 129, 0.9)'
+                      : 'rgba(37, 99, 235, 0.92)',
+                  },
+                ]}
+                onPress={handleToggleVideo}
+                activeOpacity={0.85}
+              >
+                {videoPlaying ? (
+                  <PauseBoldIcon size={22} color="#FFFFFF" strokeWidth={2.5} />
+                ) : (
+                  <PlayBoldIcon size={22} color="#FFFFFF" strokeWidth={2.5} />
+                )}
+              </TouchableOpacity>
+
+              <View style={styles.videoSceneTextCol}>
+                <Text style={styles.videoStageTitle}>{currentFrame.title}</Text>
+                <Text style={styles.videoStageSubtitle}>
+                  {currentFrame.subtitle}
+                </Text>
+                {/* Animated Audio Waveform Bars inside Video Player */}
+                <View style={styles.waveformRow}>
+                  {[12, 20, 15, 24, 18, 10, 22, 16, 25, 14, 19, 12].map(
+                    (barH, idx) => (
+                      <View
+                        key={idx}
+                        style={[
+                          styles.waveBar,
+                          {
+                            height: videoPlaying
+                              ? ((barH + videoSeconds * 5 + idx * 3) % 18) + 8
+                              : 6,
+                            backgroundColor: videoPlaying
+                              ? currentFrame.accent
+                              : '#64748B',
+                          },
+                        ]}
+                      />
+                    )
+                  )}
+                </View>
+              </View>
+            </View>
+
+            {/* Bottom Docked Scrubber & Media Bar inside Video Screen */}
+            <View style={styles.inVideoControlDock}>
+              <View style={styles.progressTrack}>
+                <View
+                  style={[
+                    styles.progressFill,
+                    {
+                      width: `${progressPercent}%`,
+                      backgroundColor: currentFrame.accent,
+                    },
+                  ]}
+                />
+              </View>
+              <View style={styles.dockMetaRow}>
+                <Text style={styles.dockStatusText}>
+                  {videoPlaying ? '▶ Playing Stream' : '⏸ Stream Paused'}
+                </Text>
+                <TouchableOpacity onPress={handleToggleMuteVideo}>
+                  <Text style={styles.dockMuteText}>
+                    {videoMuted ? '🔇 Muted' : '🔊 Audio On'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </View>
 
-        {/* Video Player Controls Bar */}
+        {/* External Video Player Controls Bar */}
         <View style={styles.videoControlsRow}>
           <TouchableOpacity
             testID="video-play-pause-btn"
@@ -653,11 +814,11 @@ export const MultimediaStudioCard: React.FC = () => {
             onPress={handleRestartVideo}
             activeOpacity={0.8}
           >
-            <Text style={styles.videoSecondaryBtnText}>↺ Restart Clip</Text>
+            <Text style={styles.videoSecondaryBtnText}>↺ Restart</Text>
           </TouchableOpacity>
 
           <Text style={styles.videoProgressLabel}>
-            {progressPercent}% Watched
+            {progressPercent}% • {formattedTime}
           </Text>
         </View>
       </View>
@@ -681,10 +842,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.16,
     shadowRadius: 14,
     elevation: 4,
-  },
-  bannerImage: {
-    width: '100%',
-    height: 138,
   },
   bannerHeroGraphic: {
     backgroundColor: '#1E3A8A',
@@ -893,69 +1050,133 @@ const styles = StyleSheet.create({
   videoViewport: {
     backgroundColor: '#0F172A',
     borderRadius: 14,
-    padding: 14,
+    overflow: 'hidden',
     borderWidth: 1.5,
     borderColor: '#334155',
     marginBottom: 12,
+    position: 'relative',
+  },
+  videoOverlayContent: {
+    padding: 12,
+    position: 'relative',
+    zIndex: 2,
   },
   videoTopOverlay: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 14,
+    marginBottom: 12,
   },
-  videoClipBadge: {
-    color: '#38BDF8',
-    fontSize: 11,
+  liveRecBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(15, 23, 42, 0.72)',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: 'rgba(148, 163, 184, 0.35)',
+  },
+  recDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  videoClipBadgeText: {
+    color: '#F8FAFC',
+    fontSize: 10.5,
     fontWeight: '800',
-    backgroundColor: 'rgba(56, 189, 248, 0.14)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
   },
   videoTimeBadge: {
     color: '#F8FAFC',
-    fontSize: 11.5,
+    fontSize: 11,
     fontWeight: '800',
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    backgroundColor: 'rgba(15, 23, 42, 0.72)',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: 'rgba(148, 163, 184, 0.35)',
   },
-  videoStageCenter: {
-    paddingVertical: 10,
+  videoCenterRow: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
+    paddingVertical: 6,
+  },
+  centerPlayCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  videoSceneTextCol: {
+    flex: 1,
   },
   videoStageTitle: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 14.5,
     fontWeight: '800',
-    textAlign: 'center',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   videoStageSubtitle: {
-    color: '#94A3B8',
-    fontSize: 12,
+    color: '#CBD5E1',
+    fontSize: 11,
     fontWeight: '600',
-    textAlign: 'center',
+    marginBottom: 8,
+  },
+  waveformRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 4,
+    height: 24,
+  },
+  waveBar: {
+    width: 5,
+    borderRadius: 3,
+  },
+  inVideoControlDock: {
+    marginTop: 10,
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    borderRadius: 9,
+    padding: 8,
   },
   progressTrack: {
     height: 7,
-    backgroundColor: '#1E293B',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 4,
     overflow: 'hidden',
-    marginTop: 12,
+    marginBottom: 6,
   },
   progressFill: {
     height: '100%',
     borderRadius: 4,
+  },
+  dockMetaRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dockStatusText: {
+    color: '#E2E8F0',
+    fontSize: 10.5,
+    fontWeight: '700',
+  },
+  dockMuteText: {
+    color: '#38BDF8',
+    fontSize: 10.5,
+    fontWeight: '800',
   },
   videoControlsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: 8,
   },
   videoPrimaryBtn: {
     flexDirection: 'row',
@@ -974,7 +1195,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#CBD5E1',
-    paddingHorizontal: 12,
+    paddingHorizontal: 11,
     paddingVertical: 8,
     borderRadius: 10,
   },
@@ -984,7 +1205,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   videoProgressLabel: {
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: '800',
     color: '#475569',
   },
