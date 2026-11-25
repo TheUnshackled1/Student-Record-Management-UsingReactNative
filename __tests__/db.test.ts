@@ -9,6 +9,13 @@ import {
 } from '../src/database/db';
 import { validateStudentInput } from '../src/types/student';
 import { CARD_THEMES, THEME_KEYS, getStudentTheme } from '../src/theme/palettes';
+import {
+  CAMPUS_BANNER_URI,
+  IMAGE_BUTTON_ICONS,
+  playTapSoundEffect,
+  toggleBackgroundMusic,
+  isBackgroundMusicPlaying,
+} from '../src/utils/soundEngine';
 
 describe('Student Record SQLite Database Layer', () => {
   let mockDb: jest.Mocked<
@@ -99,7 +106,11 @@ describe('Student Record SQLite Database Layer', () => {
   });
 });
 
-describe('Student Form Validation & Multi-Theme Palettes', () => {
+describe('Student Form Validation, Multi-Theme Palettes & Multimedia Engine', () => {
+  afterEach(() => {
+    toggleBackgroundMusic(false);
+  });
+
   it('rejects empty name, course, or age', () => {
     expect(validateStudentInput('', 'BSCS', '20').valid).toBe(false);
     expect(validateStudentInput('Juan', '', '20').valid).toBe(false);
@@ -130,5 +141,18 @@ describe('Student Form Validation & Multi-Theme Palettes', () => {
     const theme = getStudentTheme(1, 'BS Computer Science');
     expect(CARD_THEMES[theme.key]).toBeDefined();
     expect(theme.cardBg).not.toBe('#FFFFFF');
+  });
+
+  it('provides image-based UI data URIs, tap sound effect counter, and background music toggle', () => {
+    expect(CAMPUS_BANNER_URI).toContain('data:image/svg+xml');
+    expect(IMAGE_BUTTON_ICONS.bgmPlay).toContain('data:image/svg+xml');
+
+    const sfx = playTapSoundEffect('Test Tap');
+    expect(sfx.label).toContain('Test Tap Chime (880Hz)');
+    expect(sfx.count).toBeGreaterThanOrEqual(1);
+
+    expect(toggleBackgroundMusic(true)).toBe(true);
+    expect(isBackgroundMusicPlaying()).toBe(true);
+    expect(toggleBackgroundMusic(false)).toBe(false);
   });
 });

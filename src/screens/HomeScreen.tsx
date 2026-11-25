@@ -19,6 +19,8 @@ import {
   seedSampleStudents,
 } from '../database/db';
 import { CARD_THEMES } from '../theme/palettes';
+import { playTapSoundEffect } from '../utils/soundEngine';
+import { MultimediaStudioCard } from '../components/MultimediaStudioCard';
 import { KpiSummaryRow } from '../components/KpiSummaryRow';
 import { StudentCard } from '../components/StudentCard';
 import { StudentFormModal } from '../components/StudentFormModal';
@@ -55,16 +57,19 @@ export const HomeScreen: React.FC = () => {
   }, [loadStudents]);
 
   const handleOpenAddModal = () => {
+    playTapSoundEffect('Add Student Button');
     setSelectedStudent(null);
     setModalVisible(true);
   };
 
   const handleOpenEditModal = (student: Student) => {
+    playTapSoundEffect('Update Student Button');
     setSelectedStudent(student);
     setModalVisible(true);
   };
 
   const handleSubmitForm = async (input: StudentInput) => {
+    playTapSoundEffect(selectedStudent ? 'Save Update' : 'Save New Student');
     if (selectedStudent) {
       await updateStudent(db, selectedStudent.id, input);
     } else {
@@ -74,11 +79,13 @@ export const HomeScreen: React.FC = () => {
   };
 
   const handlePromptDelete = (student: Student) => {
+    playTapSoundEffect('Delete Student Button');
     setStudentToDelete(student);
   };
 
   const handleConfirmDelete = async (student: Student) => {
     try {
+      playTapSoundEffect('Confirm Delete');
       setStudentToDelete(null);
       await deleteStudent(db, student.id);
       await loadStudents();
@@ -94,6 +101,7 @@ export const HomeScreen: React.FC = () => {
 
   const handleLoadSampleData = async () => {
     try {
+      playTapSoundEffect('Load Sample Data');
       setLoading(true);
       await seedSampleStudents(db);
       await loadStudents();
@@ -144,7 +152,7 @@ export const HomeScreen: React.FC = () => {
                 <View style={styles.themeDotPurple} />
                 <View style={styles.themeDotEmerald} />
                 <Text style={styles.headerSubtitle}>
-                  SQLite Multi-Theme Dashboard
+                  SQLite & Multimedia Studio
                 </Text>
               </View>
             </View>
@@ -175,6 +183,7 @@ export const HomeScreen: React.FC = () => {
           refreshing={loading}
           ListHeaderComponent={
             <View>
+              <MultimediaStudioCard />
               <KpiSummaryRow students={students} />
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionTitle}>
@@ -273,7 +282,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     borderBottomColor: '#E2E8F0',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 14,
   },
   headerInner: {
     maxWidth: 960,
@@ -291,8 +300,8 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   brandIconBlock: {
-    width: 48,
-    height: 48,
+    width: 46,
+    height: 46,
     borderRadius: 14,
     backgroundColor: '#2563EB',
     borderWidth: 1,
@@ -301,7 +310,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    fontSize: 22,
+    fontSize: 21,
     fontWeight: '800',
     color: '#0F172A',
     letterSpacing: -0.3,
@@ -310,7 +319,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    marginTop: 3,
+    marginTop: 2,
   },
   themeDotBlue: {
     width: 8,
@@ -349,9 +358,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#10B981',
     borderColor: '#34D399',
     borderWidth: 1,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 13,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
     shadowColor: '#059669',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
@@ -361,11 +370,11 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#FFFFFF',
     fontWeight: '800',
-    fontSize: 14,
+    fontSize: 13.5,
     letterSpacing: 0.2,
   },
   listContent: {
-    padding: 20,
+    padding: 16,
     maxWidth: 960,
     width: '100%',
     alignSelf: 'center',
@@ -374,10 +383,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '800',
     color: '#1E293B',
     textTransform: 'uppercase',

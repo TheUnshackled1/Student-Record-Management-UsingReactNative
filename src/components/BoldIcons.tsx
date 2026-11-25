@@ -30,10 +30,6 @@ function renderWebSvg(
   );
 }
 
-/**
- * Total List: A multi-layered polygon stack (Blue Gradient)
- * Thick 2.5 stroke width
- */
 export const LayersIcon: React.FC<BoldIconProps> = ({
   size = 24,
   color = '#FFFFFF',
@@ -62,10 +58,6 @@ export const LayersIcon: React.FC<BoldIconProps> = ({
   );
 };
 
-/**
- * Pending Review / Active Cohort: A bold, thick-stroked clock indicator (Orange/Amber Gradient)
- * Thick 2.5 stroke width
- */
 export const ClockIcon: React.FC<BoldIconProps> = ({
   size = 24,
   color = '#FFFFFF',
@@ -92,10 +84,6 @@ export const ClockIcon: React.FC<BoldIconProps> = ({
   );
 };
 
-/**
- * Settled On-Site / Campus Courses: A distinctive map-pin to emphasize the "On-Site" aspect (Purple Gradient)
- * Thick 2.5 stroke width
- */
 export const MapPinIcon: React.FC<BoldIconProps> = ({
   size = 24,
   color = '#FFFFFF',
@@ -122,10 +110,6 @@ export const MapPinIcon: React.FC<BoldIconProps> = ({
   );
 };
 
-/**
- * Resolved / Verified Records: A premium checkmark shield (Emerald Gradient)
- * Thick 2.5 stroke width
- */
 export const ShieldCheckIcon: React.FC<BoldIconProps> = ({
   size = 24,
   color = '#FFFFFF',
@@ -150,9 +134,6 @@ export const ShieldCheckIcon: React.FC<BoldIconProps> = ({
   );
 };
 
-/**
- * Custom Bold Edit Pen Icon (2.5 stroke width)
- */
 export const EditPenIcon: React.FC<BoldIconProps> = ({
   size = 16,
   color = '#1D4ED8',
@@ -175,9 +156,6 @@ export const EditPenIcon: React.FC<BoldIconProps> = ({
   );
 };
 
-/**
- * Custom Bold Trash Icon (2.5 stroke width)
- */
 export const TrashBinIcon: React.FC<BoldIconProps> = ({
   size = 16,
   color = '#DC2626',
@@ -200,9 +178,6 @@ export const TrashBinIcon: React.FC<BoldIconProps> = ({
   );
 };
 
-/**
- * Custom Bold Plus Icon (2.5 stroke width)
- */
 export const PlusBoldIcon: React.FC<BoldIconProps> = ({
   size = 18,
   color = '#FFFFFF',
@@ -228,6 +203,127 @@ export const PlusBoldIcon: React.FC<BoldIconProps> = ({
   }
   return (
     <Text style={[styles.nativeGlyph, { color, fontSize: size }]}>+</Text>
+  );
+};
+
+export const MusicNoteIcon: React.FC<BoldIconProps> = ({
+  size = 20,
+  color = '#FFFFFF',
+  strokeWidth = 2.5,
+}) => {
+  if (Platform.OS === 'web') {
+    return renderWebSvg(size, color, strokeWidth, [
+      React.createElement('path', {
+        key: 'bar',
+        d: 'M9 18V5l12-2v13',
+      }),
+      React.createElement('circle', {
+        key: 'c1',
+        cx: '6',
+        cy: '18',
+        r: '3',
+      }),
+      React.createElement('circle', {
+        key: 'c2',
+        cx: '18',
+        cy: '16',
+        r: '3',
+      }),
+    ]);
+  }
+  return (
+    <Text style={[styles.nativeGlyph, { color, fontSize: size * 0.85 }]}>♫</Text>
+  );
+};
+
+export const PlayBoldIcon: React.FC<BoldIconProps> = ({
+  size = 18,
+  color = '#FFFFFF',
+  strokeWidth = 2.5,
+}) => {
+  if (Platform.OS === 'web') {
+    return renderWebSvg(size, color, strokeWidth, [
+      React.createElement('polygon', {
+        key: 'play',
+        points: '6 4 20 12 6 20 6 4',
+      }),
+    ]);
+  }
+  return (
+    <Text style={[styles.nativeGlyph, { color, fontSize: size * 0.85 }]}>▶</Text>
+  );
+};
+
+export const PauseBoldIcon: React.FC<BoldIconProps> = ({
+  size = 18,
+  color = '#FFFFFF',
+  strokeWidth = 2.5,
+}) => {
+  if (Platform.OS === 'web') {
+    return renderWebSvg(size, color, strokeWidth, [
+      React.createElement('rect', {
+        key: 'r1',
+        x: '6',
+        y: '4',
+        width: '4',
+        height: '16',
+      }),
+      React.createElement('rect', {
+        key: 'r2',
+        x: '14',
+        y: '4',
+        width: '4',
+        height: '16',
+      }),
+    ]);
+  }
+  return (
+    <Text style={[styles.nativeGlyph, { color, fontSize: size * 0.85 }]}>❚❚</Text>
+  );
+};
+
+export const VideoCamIcon: React.FC<BoldIconProps> = ({
+  size = 20,
+  color = '#FFFFFF',
+  strokeWidth = 2.5,
+}) => {
+  if (Platform.OS === 'web') {
+    return renderWebSvg(size, color, strokeWidth, [
+      React.createElement('polygon', {
+        key: 'lens',
+        points: '23 7 16 12 23 17 23 7',
+      }),
+      React.createElement('rect', {
+        key: 'box',
+        x: '1',
+        y: '5',
+        width: '15',
+        height: '14',
+        rx: '2',
+        ry: '2',
+      }),
+    ]);
+  }
+  return (
+    <Text style={[styles.nativeGlyph, { color, fontSize: size * 0.85 }]}>🎬</Text>
+  );
+};
+
+export const SparklesIcon: React.FC<BoldIconProps> = ({
+  size = 18,
+  color = '#FFFFFF',
+  strokeWidth = 2.5,
+}) => {
+  if (Platform.OS === 'web') {
+    return renderWebSvg(size, color, strokeWidth, [
+      React.createElement('path', {
+        key: 'star',
+        d: 'M12 3l2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4L12 3z',
+      }),
+    ]);
+  }
+  return (
+    <Text style={[styles.nativeGlyph, { color, fontSize: size * 0.85 }]}>✨</Text>
   );
 };
 
