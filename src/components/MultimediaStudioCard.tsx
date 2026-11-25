@@ -57,28 +57,28 @@ export const MultimediaStudioCard: React.FC = () => {
   const [sfxInfo, setSfxInfo] = useState(getSfxStatus());
 
   // Simple Animation values (Fade-In, Bounce Scale, Slide X/Y)
-  const fadeAnim = useRef(new Animated.Value(0.15)).current;
-  const scaleAnim = useRef(new Animated.Value(0.94)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
   const slideXAnim = useRef(new Animated.Value(0)).current;
-  const slideYAnim = useRef(new Animated.Value(18)).current;
+  const slideYAnim = useRef(new Animated.Value(0)).current;
 
   // Screen-load entrance animation (Fade-In + Slide-Up + Gentle Spring)
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 550,
+        duration: 200,
         useNativeDriver: true,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
-        speed: 14,
-        bounciness: 8,
+        speed: 20,
+        bounciness: 6,
         useNativeDriver: true,
       }),
       Animated.spring(slideYAnim, {
         toValue: 0,
-        speed: 14,
+        speed: 20,
         bounciness: 6,
         useNativeDriver: true,
       }),
@@ -191,12 +191,62 @@ export const MultimediaStudioCard: React.FC = () => {
       ]}
     >
       {/* 1. IMAGE-BASED UI: Illustrated Campus Banner & Overlay */}
-      <View style={styles.bannerCard}>
-        <Image
-          source={{ uri: CAMPUS_BANNER_URI }}
-          style={styles.bannerImage}
-          resizeMode="cover"
-        />
+      <View
+        style={[
+          styles.bannerCard,
+          activeAnimMode === 'Bounce Effect' && {
+            borderColor: '#A855F7',
+            borderWidth: 2.5,
+          },
+        ]}
+      >
+        <View
+          style={[
+            styles.bannerHeroGraphic,
+            Platform.OS === 'web'
+              ? ({
+                  backgroundImage:
+                    'linear-gradient(135deg, #1E3A8A 0%, #2563EB 52%, #7E22CE 100%)',
+                } as unknown as object)
+              : {},
+          ]}
+        >
+          <Image
+            source={{ uri: CAMPUS_BANNER_URI }}
+            style={styles.bannerImageOverlay}
+            resizeMode="cover"
+          />
+          <View style={styles.bannerHeroContent}>
+            <View style={styles.bannerHeroTopRow}>
+              <View style={styles.bannerCrestPill}>
+                <Text style={styles.bannerCrestText}>
+                  ★ MULTIMEDIA & SQLITE HUB
+                </Text>
+              </View>
+              <View style={styles.bannerCampusBadge}>
+                <Text style={styles.bannerCampusIcon}>🏛️🎓</Text>
+              </View>
+            </View>
+            <Text style={styles.bannerHeroTitle}>BSIS 4C Student Portal</Text>
+            <Text style={styles.bannerHeroSubtitle}>
+              Image-Based UI • Audio BGM & SFX • Video Player • Animations
+            </Text>
+            <View style={styles.bannerFeaturePillsRow}>
+              <View style={styles.bannerMiniPill}>
+                <Text style={styles.bannerMiniPillText}>🎵 Audio BGM</Text>
+              </View>
+              <View style={styles.bannerMiniPill}>
+                <Text style={styles.bannerMiniPillText}>🔊 Tap SFX</Text>
+              </View>
+              <View style={styles.bannerMiniPill}>
+                <Text style={styles.bannerMiniPillText}>🎬 HD Video</Text>
+              </View>
+              <View style={styles.bannerMiniPill}>
+                <Text style={styles.bannerMiniPillText}>✨ Animated</Text>
+              </View>
+            </View>
+          </View>
+        </View>
         <View style={styles.bannerFooterBar}>
           <View style={styles.bannerTagPill}>
             <SparklesIcon size={14} color="#1E40AF" strokeWidth={2.5} />
@@ -502,7 +552,7 @@ export const MultimediaStudioCard: React.FC = () => {
             >
               <VideoCamIcon size={18} color="#FFFFFF" strokeWidth={2.5} />
             </View>
-            <View>
+            <View style={styles.controlTitleCol}>
               <Text
                 style={[
                   styles.controlTitle,
@@ -513,7 +563,7 @@ export const MultimediaStudioCard: React.FC = () => {
                   },
                 ]}
               >
-                Campus Orientation Video Player
+                Campus Video Player
               </Text>
               <Text
                 style={[
@@ -525,7 +575,7 @@ export const MultimediaStudioCard: React.FC = () => {
                   },
                 ]}
               >
-                Embedded Short Video • Play / Pause Controls
+                Short Video • Play / Pause Controls
               </Text>
             </View>
           </View>
@@ -635,6 +685,84 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 138,
+  },
+  bannerHeroGraphic: {
+    backgroundColor: '#1E3A8A',
+    padding: 14,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  bannerImageOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0.25,
+  },
+  bannerHeroContent: {
+    position: 'relative',
+    zIndex: 2,
+  },
+  bannerHeroTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  bannerCrestPill: {
+    backgroundColor: '#10B981',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 999,
+  },
+  bannerCrestText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.4,
+  },
+  bannerCampusBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  bannerCampusIcon: {
+    fontSize: 16,
+  },
+  bannerHeroTitle: {
+    color: '#FFFFFF',
+    fontSize: 19,
+    fontWeight: '800',
+    letterSpacing: -0.3,
+  },
+  bannerHeroSubtitle: {
+    color: '#DBEAFE',
+    fontSize: 11.5,
+    fontWeight: '600',
+    marginTop: 2,
+    marginBottom: 10,
+  },
+  bannerFeaturePillsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  bannerMiniPill: {
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    borderColor: 'rgba(147, 197, 253, 0.45)',
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 7,
+  },
+  bannerMiniPillText: {
+    color: '#FFFFFF',
+    fontSize: 10.5,
+    fontWeight: '700',
   },
   bannerFooterBar: {
     backgroundColor: '#EFF6FF',

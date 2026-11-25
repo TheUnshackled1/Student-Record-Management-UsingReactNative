@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mobile Simulator View</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #2B2B2B;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+  }
+  .iphone-outer {
+    width: 416px;
+    height: 860px;
+    background: #141923;
+    border-radius: 56px;
+    padding: 13px;
+    box-shadow:
+      0 0 0 2px #475569,
+      0 0 0 5px #1E293B,
+      0 25px 60px rgba(0, 0, 0, 0.65);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .btn-left-1 { position: absolute; left: -7px; top: 150px; width: 4px; height: 32px; background: #475569; border-radius: 2px 0 0 2px; }
+  .btn-left-2 { position: absolute; left: -7px; top: 205px; width: 4px; height: 58px; background: #475569; border-radius: 2px 0 0 2px; }
+  .btn-left-3 { position: absolute; left: -7px; top: 278px; width: 4px; height: 58px; background: #475569; border-radius: 2px 0 0 2px; }
+  .btn-right  { position: absolute; right: -7px; top: 220px; width: 4px; height: 86px; background: #475569; border-radius: 0 2px 2px 0; }
+  .iphone-screen {
+    flex: 1;
+    background: #FFFFFF;
+    border-radius: 44px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .ios-statusbar {
+    height: 44px;
+    background: #0F172A;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 26px;
+    font-size: 13px;
+    font-weight: 700;
+    position: relative;
+    z-index: 10;
+  }
+  .notch {
+    width: 146px;
+    height: 26px;
+    background: #090D14;
+    border-radius: 0 0 18px 18px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .status-icons { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .app-iframe { width: 100%; flex: 1; border: none; background: #F1F5F9; }
+  .safari-bottom {
+    height: 92px;
+    background: #333842;
+    padding: 10px 16px 8px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #E2E8F0;
+  }
+  .url-pill {
+    background: #23272E;
+    height: 36px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-size: 12.5px;
+    color: #F8FAFC;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .url-pill .aa { font-weight: 600; color: #CBD5E1; font-size: 12px; }
+  .url-pill .domain { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 245px; font-weight: 500; }
+  .nav-icons { display: flex; align-items: center; justify-content: space-around; font-size: 16px; color: #CBD5E1; padding-bottom: 4px; }
+  .home-indicator { width: 130px; height: 4px; background: #E2E8F0; border-radius: 2px; align-self: center; }
+</style>
+</head>
+<body>
+  <div class="iphone-outer">
+    <div class="btn-left-1"></div>
+    <div class="btn-left-2"></div>
+    <div class="btn-left-3"></div>
+    <div class="btn-right"></div>
+    <div class="iphone-screen">
+      <div class="ios-statusbar">
+        <span>11:04</span>
+        <div class="notch"></div>
+        <div class="status-icons">
+          <span>▂▄▆█</span>
+          <span>Wi-Fi</span>
+          <span>🔋</span>
+        </div>
+      </div>
+      <iframe id="appFrame" class="app-iframe" src="/index.html"></iframe>
+      <div class="safari-bottom">
+        <div class="url-pill">
+          <span class="aa">AA</span>
+          <span class="domain">🔒 studentrecordmanagementreactnative.vercel.app</span>
+          <span>↻</span>
+        </div>
+        <div class="nav-icons">
+          <span>‹</span>
+          <span>›</span>
+          <span>⎙</span>
+          <span>📖</span>
+          <span>❐</span>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const scene = params.get('scene') || 'mm_01_banner';
+    document.getElementById('appFrame').src = '/index.html?scene=' + encodeURIComponent(scene);
+  </script>
+</body>
+</html>
