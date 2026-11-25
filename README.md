@@ -17,6 +17,7 @@
 [![Vercel Config](https://img.shields.io/badge/🌐_Deployment-vercel.json-0891b2?style=flat-square)](vercel.json)
 [![Contributing Guidelines](https://img.shields.io/badge/🤝_Contributing-CONTRIBUTING.md-9333ea?style=flat-square)](CONTRIBUTING.md)
 [![Code of Conduct](https://img.shields.io/badge/📜_Code_of_Conduct-CODE__OF__CONDUCT.md-0d9488?style=flat-square)](CODE_OF_CONDUCT.md)
+[![Security Policy](https://img.shields.io/badge/🛡️_Security_Policy-SECURITY.md-dc2626?style=flat-square)](SECURITY.md)
 [![Dependencies](https://img.shields.io/badge/⚙️_Dependencies-package.json-d97706?style=flat-square)](package.json)
 [![MIT License](https://img.shields.io/badge/⚖️_License-LICENSE-16a34a?style=flat-square)](LICENSE)
 
@@ -54,6 +55,7 @@
 - 📸 [Mobile Device Output Screenshots (`submission/screenshots/`)](submission/screenshots/)
 - 🤝 [Developer Contribution Guidelines (`CONTRIBUTING.md`)](CONTRIBUTING.md)
 - 📜 [Contributor Code of Conduct (`CODE_OF_CONDUCT.md`)](CODE_OF_CONDUCT.md)
+- 🛡️ [Security Policy & Vulnerabilities (`SECURITY.md`)](SECURITY.md)
 - ⚖️ [MIT License File (`LICENSE`)](LICENSE)
 
 ---
@@ -177,8 +179,8 @@ flowchart TD
 ### 1. Clone the Repository
 
 ```powershell
-git clone <repository-url>
-cd "Student Record Management"
+git clone https://github.com/TheUnshackled1/Student-Record-Management-UsingReactNative.git
+cd "Student-Record-Management-UsingReactNative"
 ```
 
 ---
@@ -283,7 +285,9 @@ Exports the production static bundle into the `dist/` directory configured in [`
 │   ├── 📐 contribution_workflow.drawio.svg          # Developer contribution workflow SVG diagram
 │   ├── 📐 contribution_workflow.drawio              # Editable Draw.io source for contribution workflow
 │   ├── 📐 pr_lifecycle.drawio.svg                   # Pull Request review lifecycle SVG diagram
-│   └── 📐 pr_lifecycle.drawio                       # Editable Draw.io source for PR lifecycle
+│   ├── 📐 pr_lifecycle.drawio                       # Editable Draw.io source for PR lifecycle
+│   ├── 📐 security_architecture.drawio.svg          # 4-layer Security Architecture SVG diagram
+│   └── 📐 security_architecture.drawio              # Editable Draw.io source for security architecture
 ├── 📂 src/                        ⚛️ Application Source Code (TypeScript + React Native)
 │   ├── 📂 components/             🧩 Reusable UI, Multimedia & Modal Components
 │   │   ├── 🎨 BoldIcons.tsx                 # Custom 2.5px-stroke vector SVG icons (Layers, Clock, MapPin, Shield, Audio, Video)
@@ -331,6 +335,7 @@ Exports the production static bundle into the `dist/` directory configured in [`
 ├── 📦 package.json                # Project scripts, dependencies & devDependencies
 ├── 🤝 CONTRIBUTING.md             # Developer contribution guidelines & PR workflow
 ├── 📜 CODE_OF_CONDUCT.md          # Contributor Covenant v2.1 Code of Conduct
+├── 🛡️ SECURITY.md                 # Security policy & vulnerability reporting guide
 ├── ⚖️ LICENSE                     # MIT License
 └── 📄 README.md                   # Project documentation
 ```

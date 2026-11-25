@@ -32,8 +32,8 @@ We are committed to providing a welcoming, respectful, and collaborative environ
 
 1. **Fork & Clone the Repository**:
    ```powershell
-   git clone https://github.com/TheUnshackled1/Student-Record-Management-React-Native.git
-   cd "Student Record Management"
+   git clone https://github.com/TheUnshackled1/Student-Record-Management-UsingReactNative.git
+   cd "Student-Record-Management-UsingReactNative"
    ```
 
 2. **Install Dependencies**:
